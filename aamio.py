@@ -9,7 +9,7 @@ import json
 
 from AMUU import *
 
-class aamio():
+class aamoio():
 
 	def __init__(self, home):
 
@@ -29,14 +29,33 @@ class aamio():
 		# Check if the collection exists
 		if os.path.exists(name):
 			print('This collection already exists.')
+			return 0
+		else:
+			# Create the new collection if it doesn't
+			os.mkdir(name)
+			return 1
 
-		# Create the new collection
-		os.mkdir(name)
+	def removeCol(self, name):
+		
+		os.chdir(self.home)
+
+		# Check if the collection doesn't exist
+		if not os.path.exists(name):
+			print('This collection does not exist.')
+			return 0
+		else:
+			# Create the new collection if it does
+			os.rmdir(name)
+			if name == self.currentCollection:
+				self.currentCollection == None
+			return 1
 
 
 	def promt(self):
 
 		while True:
+
+			# I make sure we're in the home directory after the user enters a command so that way adding collections and chunks is easier.
 			os.chdir(self.home)
 
 			command = input(f'AAMIO:{self.currentCollection}:{self.currentChunk}-$').split(' ')
@@ -45,37 +64,37 @@ class aamio():
 			if command[0] == 'help':
 				print('''				
 -|----------------------[AAMOIO HELP MANUAL]----------------------------------------------------------------------------------------------|-
- |						         |                                                                                                        |
+ |                               |                                                                                                        |
  |-----------------------[GENERAL COMMANDS]-----------------------------------------------------------------------------------------------|
- |                               |																										  |
- |	help                         |  Displays this menu.																					  |
- |  exit                         |  Exits the program.                																	  |
- | 					             |	 																									  |
+ |                               |                                                                                                        |
+ |  help                         |  Displays this menu.                                                                                   |
+ |  exit                         |  Exits the program.                                                                                    |
+ |                               |                                                                                                        |
  |----------------------[COLLECTION COMMANDS]---------------------------------------------------------------------------------------------|
- |                               |																										  |
- |  addCol [NAME]                |  Makes a collection called [NAME] (Alt. aCo). No spaces are allowed.									  |
- |  removeCol [NAME]             |  Deletes a collection called name, if it exists (Alt. rmCo).											  |
- |  lstcols                      |  Lists all collections (Alt. collections).															  |
- |  copyCol [SOURCE] [DEST]      |  Copies [SOURCE] to [DEST] (Alt. cpCo)																  |
+ |                               |                                                                                                        |
+ |  addCol [NAME]                |  Makes a collection called [NAME] (Alt. aCo). No spaces are allowed.                                   |
+ |  removeCol [NAME]             |  Deletes a collection called name, if it exists (Alt. rmCo).                                           |
+ |  lstcols                      |  Lists all collections (Alt. collections).                                                             |
+ |  copyCol [SOURCE] [DEST]      |  Copies [SOURCE] to [DEST] (Alt. cpCo)                                                                 |
  |  collection                   |  Prints the current collection, if it exists. If not, it prints None.                                  |
- |  changeCollection [NEW]       |  Changes from the current collection to [NEW]. If [NEW] doesn't exist, returns error (Alt. cCo)		  |
- |                               |																										  |
+ |  changeCollection [NEW]       |  Changes from the current collection to [NEW]. If [NEW] doesn't exist, returns error (Alt. cCo)        |
+ |                               |                                                                                                        |
  |------------------------[CHUNK COMMANDS]------------------------------------------------------------------------------------------------|
- |                               |																										  |
- |  addChunk [NAME]              |  Makes a chunk called [NAME] (Alt. aCh).																  |
- |  removeChunk [NAME] 	         |  Removes the chunk called [NAME]	(Alt. rmCh)															  |
- |  lstChunks                    |  Lists all chunks in the current collection (Alt. chunks).											  |
+ |                               |                                                                                                        |
+ |  addChunk [NAME]              |  Makes a chunk called [NAME] (Alt. aCh).                                                               |
+ |  removeChunk [NAME]           |  Removes the chunk called [NAME] (Alt. rmCh)                                                           |
+ |  lstChunks                    |  Lists all chunks in the current collection (Alt. chunks).                                             |
  |  copyChunk [SOURCE] [DEST]    |  Copies [SOURCE] to [DEST] (Alt. cpCh)                                                                 |
- |  chunk                        |  Prints the current working chunk.																	  |
- | 	changeChunk [NEW]            |  Changes from the current chunk to [NEW]. If [NEW] doesn't exist, returns error (Alt. cCh)             |
- |	                             |																										  |
+ |  chunk                        |  Prints the current working chunk.                                                                     |
+ |  changeChunk [NEW]            |  Changes from the current chunk to [NEW]. If [NEW] doesn't exist, returns error (Alt. cCh)             |
+ |                               |                                                                                                        |
  |----------------------[ATTRIBUTE COMMANDS]----------------------------------------------------------------------------------------------|
- |                               |																										  |
+ |                               |                                                                                                        |
  |  addAttribute [NAME] <INFO>   |  Adds an attribute to the current chunk. No spaces are allowed in [NAME].                              |
- |  editAttribute [NAME] [INFO]  |  Changes the value of an attribute (Alt. eA).														  |
- |  removeAttribute [NAME]       |  Removes an attriute from the current chunk (Alt. rmA).												  |
+ |  editAttribute [NAME] [INFO]  |  Changes the value of an attribute (Alt. eA).                                                          |
+ |  removeAttribute [NAME]       |  Removes an attriute from the current chunk (Alt. rmA).                                                |
  |  lstAttributes                |  Lists all the attributes (and their values) in the current chunk (Alt. attributes)                    |
- |                               |																										  |	
+ |                               |                                                                                                        |	
 -|----------------------------------------------------------------------------------------------------------------------------------------|-
 				''')
 
@@ -86,10 +105,53 @@ class aamio():
 			elif command[0] == 'cls':
 				clear()
 
-			elif command[0] == 'aCo' or command[0] == 'addCol':
-				print(f'Creating collection {command[1]}.')				
-				self.addCol(command[1])
+			elif command[0] == 'd00d':
+				print('You fucking aamoio.\nhttps://discordapp.com/channels/572004140587417610/630884961141915678/738089093115936903')
+
+			elif command[0] == 'aco' or command[0] == 'addcol':
+				print('Attempting to create collection.')
+				try:				
+					if self.addCol(command[1]):
+						print(f'Success! Collection {command[1]} exists now!')
+				except IndexError:
+					print('No name specified.')
+
+			elif command[0] == 'rmco' or command[0] == 'removecol':
+				print('Attempting to remove collection.')
+				try:
+					if self.removeCol(command[1]):
+						print(f'Success! Collection {command[1]} is gone!')
+				except IndexError:
+					print('No name specified.')
+
+			else:
+				print(f'{command[0]} Is an Invalid Command')
+
+	def startup(self):
+		clear()
+		print(
+'''
+	Welcome to...
+	     ___           ___      .___  ___.   ______    __    ______   
+	    /   \\         /   \\     |   \\/   |  /  __  \\  |  |  /  __  \\  
+	   /  ^  \\       /  ^  \\    |  \\  /  | |  |  |  | |  | |  |  |  | 
+	  /  /_\\  \\     /  /_\\  \\   |  |\\/|  | |  |  |  | |  | |  |  |  | 
+	 /  _____  \\   /  _____  \\  |  |  |  | |  `--'  | |  | |  `--'  | 
+	/__/     \\__\\ /__/     \\__\\ |__|  |__|  \\______/  |__|  \\______/ 
+
+	or...
+
+	A_personlol's Amazing       Magical     OSINT     Info  Organizer
+''')
+		input('Press enter to continue...')
+		clear()
+		self.promt()
 
 
 
+
+if __name__ == '__main__':
+
+	aa = aamoio('.')
+	aa.startup()
 
