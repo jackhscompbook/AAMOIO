@@ -6,6 +6,7 @@
 import sys
 import os
 import json
+import shutil
 
 from AMUU import *
 
@@ -45,7 +46,7 @@ class aamoio():
 			return 0
 		else:
 			# Create the new collection if it does
-			os.rmdir(name)
+			shutil.rmtree(name)
 			if name == self.currentCollection:
 				self.currentCollection == None
 			return 1
@@ -74,7 +75,7 @@ class aamoio():
  |                               |                                                                                                        |
  |  addCol [NAME]                |  Makes a collection called [NAME] (Alt. aCo). No spaces are allowed.                                   |
  |  removeCol [NAME]             |  Deletes a collection called name, if it exists (Alt. rmCo).                                           |
- |  lstcols                      |  Lists all collections (Alt. collections).                                                             |
+ |  lstcols                      |  Lists all collections (Alt. lCo).                                                                     |
  |  copyCol [SOURCE] [DEST]      |  Copies [SOURCE] to [DEST] (Alt. cpCo)                                                                 |
  |  collection                   |  Prints the current collection, if it exists. If not, it prints None.                                  |
  |  changeCollection [NEW]       |  Changes from the current collection to [NEW]. If [NEW] doesn't exist, returns error (Alt. cCo)        |
@@ -99,16 +100,20 @@ class aamoio():
 				''')
 
 			elif command[0] == 'exit':
+				print('')
 				print('Exiting...')
 				break
 
 			elif command[0] == 'cls':
 				clear()
+				print('')
 
 			elif command[0] == 'd00d':
+				print('')
 				print('You fucking aamoio.\nhttps://discordapp.com/channels/572004140587417610/630884961141915678/738089093115936903')
 
 			elif command[0] == 'aco' or command[0] == 'addcol':
+				print('')
 				print('Attempting to create collection.')
 				try:				
 					if self.addCol(command[1]):
@@ -117,6 +122,7 @@ class aamoio():
 					print('No name specified.')
 
 			elif command[0] == 'rmco' or command[0] == 'removecol':
+				print('')
 				print('Attempting to remove collection.')
 				try:
 					if self.removeCol(command[1]):
@@ -124,8 +130,21 @@ class aamoio():
 				except IndexError:
 					print('No name specified.')
 
+			elif command[0] == 'lco' or command[0] == 'lstcols':
+				print('')
+				print('Collections:\n')
+				for i in os.scandir(self.home):
+					if os.path.isdir(i.name) and i.name != '__pycache__':
+						print(f'\t{i.name}')
+
+			elif command[0] == '' or command[0] == ' ':
+				print('')
+
 			else:
+				print('')
 				print(f'{command[0]} Is an Invalid Command')
+
+			print('')
 
 	def startup(self):
 		clear()
@@ -143,7 +162,7 @@ class aamoio():
 
 	A_personlol's Amazing       Magical     OSINT     Info  Organizer
 ''')
-		input('Press enter to continue...')
+		input('	Press enter to continue...')
 		clear()
 		self.promt()
 
